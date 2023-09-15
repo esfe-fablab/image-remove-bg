@@ -34,14 +34,22 @@ fs.readdir(inputDirectory, async (err, files) => {
   // Iterar a través de los archivos en la carpeta de entrada
   for (const file of files) {
     const inputFilePath = path.join(inputDirectory, file);
-    const outputFilePath = path.join(outputDirectory, file.replace(/\.[^/.]+$/, ".webp"));
 
-    // Procesar la imagen
-    try {
-      await processImage(inputFilePath, outputFilePath);
-      console.log(`Imagen procesada: ${file}`);
-    } catch (error) {
-      console.error(`Error al procesar la imagen ${file}:`, error);
+    // Verificar si el archivo es una imagen (por ejemplo, con extensión .jpg, .png, .jpeg, etc.)
+    if (/\.(jpg|jpeg|png|gif|webp)$/i.test(file)) {
+      const outputFilePath = path.join(outputDirectory, file.replace(/\.[^/.]+$/, ".webp"));
+
+      // Procesar la imagen
+      try {
+        await processImage(inputFilePath, outputFilePath);
+        console.log(`Imagen procesada: ${file}`);
+      } catch (error) {
+        console.error(`Error al procesar la imagen ${file}:`, error);
+      }
+    } else {
+      // Omitir archivos que no son imágenes
+      console.log(`Archivo omitido (no es una imagen): ${file}`);
     }
   }
 });
+
